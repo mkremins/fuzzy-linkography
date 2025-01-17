@@ -238,21 +238,83 @@ function makeLinkObjects(props) {
 	return {linkLines, linkJoints};
 }
 
+function DownloadButton({ episode }) {
+	const handleDownload = () => {
+		const data = {
+			title: episode.title,
+			moves: episode.moves,
+			links: episode.links,
+			linkObjects: makeLinkObjects(episode)
+		}
+		
+		const blob = new Blob([JSON.stringify(data, null, 2)], { 
+			type: 'application/json' 
+		})
+		
+		const url = URL.createObjectURL(blob)
+		const a = document.createElement('a')
+		a.href = url
+		a.download = `${episode.title}-linkograph.json`
+		a.click()
+		URL.revokeObjectURL(url)
+	}
+	
+	return e("button", {
+		onClick: handleDownload,
+		style: {
+			marginLeft: '10px',
+			padding: '5px 10px'
+		}
+	}, "下载数据")
+}
+
 function FuzzyLinkograph(props) {
 	const dividers = makeTimelineDividers(props);
 	const {linkLines, linkJoints} = makeLinkObjects(props);
+	
+	// 创建完整的episode对象
+	const episode = {
+		title: props.title,
+		moves: props.moves,
+		links: props.links,
+		moveSpacing: props.moveSpacing,
+		maxForelinkIndex: props.maxForelinkIndex,
+		maxBacklinkIndex: props.maxBacklinkIndex
+	};
+	
 	return e("div", {className: "fuzzy-linkograph"},
-		e("h2", {}, props.title),
-		e("svg", {viewBox: `0 0 ${GRAPH_WIDTH} ${(GRAPH_WIDTH / 2) + INIT_Y}`},
+		e("div", {
+			style: {
+				display: 'flex',
+				alignItems: 'center',
+				marginBottom: '10px'  // 添加一些间距
+			}
+		},
+			e("h2", {}, props.title),
+			e(DownloadButton, {episode: episode})  // 传递完整的episode对象
+		),
+		e("svg", {
+			viewBox: `0 0 ${GRAPH_WIDTH} ${(GRAPH_WIDTH / 2) + INIT_Y}`,
+			style: {width: '100%'}  // 确保SVG响应式
+		},
 			...dividers,
 			...linkLines.sort((a, b) => a.strength - b.strength).map(line => {
 				return e("line", {
-					x1: line.x1, y1: line.y1, x2: line.x2, y2: line.y2,
-					stroke: line.color, strokeWidth: 2
+					x1: line.x1,
+					y1: line.y1,
+					x2: line.x2,
+					y2: line.y2,
+					stroke: line.color,
+					strokeWidth: 2
 				});
 			}),
 			...linkJoints.sort((a, b) => a.strength - b.strength).map(joint => {
-				return e("circle", {cx: joint.x, cy: joint.y, r: 3, fill: joint.color});
+				return e("circle", {
+					cx: joint.x,
+					cy: joint.y,
+					r: 3,
+					fill: joint.color
+				});
 			}),
 			...props.moves.map((_, idx) => e(DesignMove, {...props, idx}))
 		)
@@ -271,7 +333,18 @@ function renderUI() {
 		root = ReactDOM.createRoot(document.getElementById('app'));
 	}
 	root.render(e("div", {},
-		...appState.episodes.map(episode => e(FuzzyLinkograph, episode))
+		...appState.episodes.map(episode => {
+			// 确保传递所有必要的属性
+			return e(FuzzyLinkograph, {
+				...episode,  // 展开episode的所有属性
+				title: episode.title,
+				moves: episode.moves,
+				links: episode.links,
+				moveSpacing: episode.moveSpacing,
+				maxForelinkIndex: episode.maxForelinkIndex,
+				maxBacklinkIndex: episode.maxBacklinkIndex
+			});
+		})
 	));
 }
 
@@ -311,7 +384,7 @@ async function main() {
 		computeLinkIndexes(episode);
 		computeEntropy(episode);
 		episode.moveSpacing = (GRAPH_WIDTH - (INIT_X * 4)) / (episode.moves.length - 1);
-		console.log(episode);
+		console.log("Episode data:", episode);  // 添加调试信息
 	}
 	renderUI();
 }
