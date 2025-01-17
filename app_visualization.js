@@ -239,39 +239,11 @@ function makeLinkObjects(props) {
 	return {linkLines, linkJoints};
 }
 
-function DownloadButton(props) {
-	const handleDownload = () => {
-		const data = {
-			title: props.title,
-			moves: props.moves,
-			links: props.links,
-			linkObjects: makeLinkObjects(props)
-		}
-		
-		const blob = new Blob([JSON.stringify(data, null, 2)], {
-			type: 'application/json'
-		})
-		
-		const url = URL.createObjectURL(blob)
-		const a = document.createElement('a')
-		a.href = url
-		a.download = `linkograph-${props.title}.json`
-		a.click()
-		URL.revokeObjectURL(url)
-	}
-	
-	return e("button", {
-		className: "download-btn",
-		onClick: handleDownload
-	}, "Download Linkograph Data")
-}
-
 function FuzzyLinkograph(props) {
 	const dividers = makeTimelineDividers(props);
 	const {linkLines, linkJoints} = makeLinkObjects(props);
 	return e("div", {className: "fuzzy-linkograph"},
 		e("h2", {}, props.title),
-		e(DownloadButton, props),
 		e("svg", {viewBox: `0 0 ${GRAPH_WIDTH} ${(GRAPH_WIDTH / 2) + INIT_Y}`},
 			...dividers,
 			...linkLines.sort((a, b) => a.strength - b.strength).map(line => {
