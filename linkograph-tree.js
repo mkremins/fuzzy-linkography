@@ -30,7 +30,11 @@ let PARAMS = {
         b: 40,
         variance: 20,
         alpha: 200
-    }
+    },
+    
+    // Add new leaf angle parameters
+    leafBaseAngle: 45,  // Base angle for leaf growth
+    leafAngleVariance: 15,  // How much the angle can vary
 };
 
 // Constants from app.js
@@ -224,11 +228,11 @@ function drawConnections() {
                 if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
                     const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                         PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-                    // Calculate branch angle and add perpendicular offset
+                    // Calculate branch angle and add upward bias
                     const branchAngle = atan2(jointY - conn.fromPos.y, jointX - conn.fromPos.x);
                     const leafAngle = branchAngle + 
-                        (random() < 0.5 ? 90 : -90) + 
-                        random(-PARAMS.leafAngleRange/2, PARAMS.leafAngleRange/2);
+                        (random() < 0.5 ? 45 : -45) +  // Changed to 45 degrees instead of 90
+                        random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);  // Reduce random range
                     drawLeaf(x1, y1, leafSize, leafAngle);
                 }
             }
@@ -247,11 +251,11 @@ function drawConnections() {
                 if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
                     const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                         PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-                    // Calculate branch angle and add perpendicular offset
+                    // Calculate branch angle and add upward bias
                     const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
                     const leafAngle = branchAngle + 
-                        (random() < 0.5 ? 90 : -90) + 
-                        random(-PARAMS.leafAngleRange/2, PARAMS.leafAngleRange/2);
+                        (random() < 0.5 ? 45 : -45) +  // Changed to 45 degrees instead of 90
+                        random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);  // Reduce random range
                     drawLeaf(x1, y1, leafSize, leafAngle);
                 }
             }
@@ -337,7 +341,16 @@ function setupTweakpane() {
     // Load saved parameters if they exist
     const savedParams = localStorage.getItem('linkographParams');
     if (savedParams) {
-        PARAMS = JSON.parse(savedParams);
+        // Ensure merge instead of replacing the entire object
+        const loadedParams = JSON.parse(savedParams);
+        PARAMS = {
+            ...PARAMS,  // Keep default values
+            ...loadedParams,  // Override with saved values
+            leafColor: {  // Ensure color object structure is complete
+                ...PARAMS.leafColor,
+                ...(loadedParams.leafColor || {})
+            }
+        };
     }
     
     // Visualization folder
@@ -362,13 +375,18 @@ function setupTweakpane() {
     styleFolder.addInput(PARAMS, 'leafSizeMin', { min: 1, max: 20 });
     styleFolder.addInput(PARAMS, 'leafSizeMax', { min: 1, max: 40 });
     styleFolder.addInput(PARAMS, 'leafDensity', { min: 0, max: 1 });
-    styleFolder.addInput(PARAMS, 'leafAngleRange', { min: 0, max: 180 });
+    styleFolder.addInput(PARAMS, 'leafAngleRange', { min: 0, max: 90 });
+    
+    // Leaf Angle folder
+    const leafAngleFolder = pane.addFolder({ title: 'Leaf Angles' });
+    leafAngleFolder.addInput(PARAMS, 'leafBaseAngle', { min: 0, max: 90 });
+    leafAngleFolder.addInput(PARAMS, 'leafAngleVariance', { min: 0, max: 45 });
     
     // Color folder
     const colorFolder = pane.addFolder({ title: 'Leaf Color' });
-    colorFolder.addInput(PARAMS.leafColor, 'r', { min: 0, max: 255 });
-    colorFolder.addInput(PARAMS.leafColor, 'g', { min: 0, max: 255 });
-    colorFolder.addInput(PARAMS.leafColor, 'b', { min: 0, max: 255 });
+    colorFolder.addInput(PARAMS.leafColor, 'r', { min: 0, max: 255, label: 'Red' });
+    colorFolder.addInput(PARAMS.leafColor, 'g', { min: 0, max: 255, label: 'Green' });
+    colorFolder.addInput(PARAMS.leafColor, 'b', { min: 0, max: 255, label: 'Blue' });
     colorFolder.addInput(PARAMS.leafColor, 'variance', { min: 0, max: 50 });
     colorFolder.addInput(PARAMS.leafColor, 'alpha', { min: 0, max: 255 });
     
