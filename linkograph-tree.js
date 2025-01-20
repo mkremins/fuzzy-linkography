@@ -128,6 +128,7 @@ function draw() {
     drawMoves();
 }
 
+//currently not used
 function drawTimelineDividers() {
     if (!linkographData.moves) return;
     
@@ -198,81 +199,54 @@ function drawConnections() {
         
         stroke(0, alpha);
         
-        // draw line from start to joint
+        // Draw first half (from joint to start)
         for (let t = 0; t <= 1; t += 0.02) {
-            const x1 = lerp(conn.fromPos.x, jointX, t);
-            const y1 = lerp(conn.fromPos.y, jointY, t);
-            const x2 = lerp(conn.fromPos.x, jointX, t + 0.02);
-            const y2 = lerp(conn.fromPos.y, jointY, t + 0.02);
-            const weight = map(t, 0, 1, baseWeight * 0.3, baseWeight * 2.5);
+            const x1 = lerp(jointX, conn.fromPos.x, t);  
+            const y1 = lerp(jointY, conn.fromPos.y, t);
+            const x2 = lerp(jointX, conn.fromPos.x, t + 0.02);
+            const y2 = lerp(jointY, conn.fromPos.y, t + 0.02);
+            const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);  
             strokeWeight(weight);
             line(x1, y1, x2, y2);
-        }
-        
-        // Draw line from joint to end, and add leaves at the end
-        if (strength >= PARAMS.leafThreshold) {
-            const leafCount = Math.floor(map(strength, PARAMS.leafThreshold, 1, 
-                PARAMS.minLeafCount, PARAMS.maxLeafCount));
             
-            // Draw first half (from start to joint)
-            for (let t = 0; t <= 1; t += 0.02) {
-                const x1 = lerp(conn.fromPos.x, jointX, t);
-                const y1 = lerp(conn.fromPos.y, jointY, t);
-                const x2 = lerp(conn.fromPos.x, jointX, t + 0.02);
-                const y2 = lerp(conn.fromPos.y, jointY, t + 0.02);
-                const weight = map(t, 0, 1, baseWeight * 0.3, baseWeight * 2.5);
-                strokeWeight(weight);
-                line(x1, y1, x2, y2);
-                
-                // Add leaves in the end zone of first half
-                if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
-                    const leafSize = map(strength, PARAMS.leafThreshold, 1, 
-                        PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-                    // Calculate branch angle and add upward bias
-                    const branchAngle = atan2(jointY - conn.fromPos.y, jointX - conn.fromPos.x);
-                    const leafAngle = branchAngle + 
-                        (random() < 0.5 ? 45 : -45) +  // Changed to 45 degrees instead of 90
-                        random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);  // Reduce random range
-                    drawLeaf(x1, y1, leafSize, leafAngle);
-                }
-            }
-            
-            // Draw second half (from joint to end)
-            for (let t = 0; t <= 1; t += 0.02) {
-                const x1 = lerp(jointX, conn.toPos.x, t);
-                const y1 = lerp(jointY, conn.toPos.y, t);
-                const x2 = lerp(jointX, conn.toPos.x, t + 0.02);
-                const y2 = lerp(jointY, conn.toPos.y, t + 0.02);
-                const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);
-                strokeWeight(weight);
-                line(x1, y1, x2, y2);
-                
-                // Add leaves in the end zone of second half
-                if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
-                    const leafSize = map(strength, PARAMS.leafThreshold, 1, 
-                        PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-                    // Calculate branch angle and add upward bias
-                    const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
-                    const leafAngle = branchAngle + 
-                        (random() < 0.5 ? 45 : -45) +  // Changed to 45 degrees instead of 90
-                        random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);  // Reduce random range
-                    drawLeaf(x1, y1, leafSize, leafAngle);
-                }
-            }
-        } else {
-            // draw regular branch without leaves
-            for (let t = 0; t <= 1; t += 0.02) {
-                const x1 = lerp(jointX, conn.toPos.x, t);
-                const y1 = lerp(jointY, conn.toPos.y, t);
-                const x2 = lerp(jointX, conn.toPos.x, t + 0.02);
-                const y2 = lerp(jointY, conn.toPos.y, t + 0.02);
-                const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);
-                strokeWeight(weight);
-                line(x1, y1, x2, y2);
+            if (strength >= PARAMS.leafThreshold && 
+                t > 1 - PARAMS.leafZone && 
+                random() < PARAMS.leafDensity) {
+                const leafSize = map(strength, PARAMS.leafThreshold, 1, 
+                    PARAMS.leafSizeMin, PARAMS.leafSizeMax);
+                const branchAngle = atan2(conn.fromPos.y - jointY, conn.fromPos.x - jointX);  
+                const leafAngle = branchAngle + 
+                    (random() < 0.5 ? 45 : -45) +
+                    random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
+                drawLeaf(x1, y1, leafSize, leafAngle);
             }
         }
         
-        // draw joint point
+        // Draw second half (from joint to end)
+        for (let t = 0; t <= 1; t += 0.02) {
+            const x1 = lerp(jointX, conn.toPos.x, t);
+            const y1 = lerp(jointY, conn.toPos.y, t);
+            const x2 = lerp(jointX, conn.toPos.x, t + 0.02);
+            const y2 = lerp(jointY, conn.toPos.y, t + 0.02);
+            const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);
+            strokeWeight(weight);
+            line(x1, y1, x2, y2);
+            
+            // Add leaves if strength threshold is met and in leaf zone
+            if (strength >= PARAMS.leafThreshold && 
+                t > 1 - PARAMS.leafZone && 
+                random() < PARAMS.leafDensity) {
+                const leafSize = map(strength, PARAMS.leafThreshold, 1, 
+                    PARAMS.leafSizeMin, PARAMS.leafSizeMax);
+                const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
+                const leafAngle = branchAngle + 
+                    (random() < 0.5 ? 45 : -45) +
+                    random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
+                drawLeaf(x1, y1, leafSize, leafAngle);
+            }
+        }
+        
+        // Draw joint point
         noStroke();
         fill(0, alpha);
         circle(jointX, jointY, baseWeight * 2.5);
