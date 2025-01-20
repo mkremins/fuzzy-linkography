@@ -156,19 +156,21 @@ function drawLeaf(x, y, size, angle) {
     fill(randomR, randomG, randomB, alpha);
     noStroke();
     
+    // Move the leaf origin to the branch edge
+    translate(0, -strokeWeight() / 2);  // Move origin to branch edge
+    
     beginShape();
-    for (let i = 45; i < 135; i++) {
-        const rad = size;
+    // Draw leaf shape starting from the branch
+    vertex(0, 0);  // Start at branch connection point
+    
+    // Draw the leaf outline
+    for (let i = -45; i <= 45; i++) {
+        const rad = size * (1 - abs(i) / 90);  // Taper the leaf
         const leafX = rad * cos(i);
-        const leafY = rad * sin(i);
+        const leafY = -rad * sin(i);  // Negative to grow outward
         vertex(leafX, leafY);
     }
-    for (let i = 135; i > 40; i--) {
-        const rad = size;
-        const leafX = rad * cos(i);
-        const leafY = rad * sin(-i) + size * 1.3;
-        vertex(leafX, leafY);
-    }
+    
     endShape(CLOSE);
     pop();
 }
@@ -203,11 +205,35 @@ function drawConnections() {
             line(x1, y1, x2, y2);
         }
         
-        // draw line from joint to end, and add leaves at the end
+        // Draw line from joint to end, and add leaves at the end
         if (strength >= PARAMS.leafThreshold) {
             const leafCount = Math.floor(map(strength, PARAMS.leafThreshold, 1, 
                 PARAMS.minLeafCount, PARAMS.maxLeafCount));
             
+            // Draw first half (from start to joint)
+            for (let t = 0; t <= 1; t += 0.02) {
+                const x1 = lerp(conn.fromPos.x, jointX, t);
+                const y1 = lerp(conn.fromPos.y, jointY, t);
+                const x2 = lerp(conn.fromPos.x, jointX, t + 0.02);
+                const y2 = lerp(conn.fromPos.y, jointY, t + 0.02);
+                const weight = map(t, 0, 1, baseWeight * 0.3, baseWeight * 2.5);
+                strokeWeight(weight);
+                line(x1, y1, x2, y2);
+                
+                // Add leaves in the end zone of first half
+                if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
+                    const leafSize = map(strength, PARAMS.leafThreshold, 1, 
+                        PARAMS.leafSizeMin, PARAMS.leafSizeMax);
+                    // Calculate branch angle and add perpendicular offset
+                    const branchAngle = atan2(jointY - conn.fromPos.y, jointX - conn.fromPos.x);
+                    const leafAngle = branchAngle + 
+                        (random() < 0.5 ? 90 : -90) + 
+                        random(-PARAMS.leafAngleRange/2, PARAMS.leafAngleRange/2);
+                    drawLeaf(x1, y1, leafSize, leafAngle);
+                }
+            }
+            
+            // Draw second half (from joint to end)
             for (let t = 0; t <= 1; t += 0.02) {
                 const x1 = lerp(jointX, conn.toPos.x, t);
                 const y1 = lerp(jointY, conn.toPos.y, t);
@@ -217,13 +243,16 @@ function drawConnections() {
                 strokeWeight(weight);
                 line(x1, y1, x2, y2);
                 
-                // add leaves at the end
+                // Add leaves in the end zone of second half
                 if (t > 1 - PARAMS.leafZone && random() < PARAMS.leafDensity) {
                     const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                         PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-                    const angle = random(-PARAMS.leafAngleRange/2, PARAMS.leafAngleRange/2) + 
-                        atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
-                    drawLeaf(x1, y1, leafSize, angle);
+                    // Calculate branch angle and add perpendicular offset
+                    const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
+                    const leafAngle = branchAngle + 
+                        (random() < 0.5 ? 90 : -90) + 
+                        random(-PARAMS.leafAngleRange/2, PARAMS.leafAngleRange/2);
+                    drawLeaf(x1, y1, leafSize, leafAngle);
                 }
             }
         } else {
