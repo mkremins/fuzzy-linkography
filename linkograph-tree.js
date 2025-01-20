@@ -124,20 +124,41 @@ function drawConnections() {
         
         // Map strength to visual properties
         const alpha = map(strength, MIN_LINK_STRENGTH, 1, 50, 255);
-        const weight = map(strength, MIN_LINK_STRENGTH, 1, 2, 4);
+        const baseWeight = map(strength, MIN_LINK_STRENGTH, 1, 2, 4);
         
-        // Draw connection lines
+        // Draw connection lines with varying thickness
         stroke(0, alpha);
-        strokeWeight(weight);
         
-        // Draw two lines forming right angle
-        line(conn.fromPos.x, conn.fromPos.y, jointX, jointY);
-        line(conn.toPos.x, conn.toPos.y, jointX, jointY);
+        // Draw line from start to joint (gradually thickening)
+        for (let t = 0; t <= 1; t += 0.02) {
+            const x1 = lerp(conn.fromPos.x, jointX, t);
+            const y1 = lerp(conn.fromPos.y, jointY, t);
+            const x2 = lerp(conn.fromPos.x, jointX, t + 0.02);
+            const y2 = lerp(conn.fromPos.y, jointY, t + 0.02);
+            
+            // Weight increases as we approach the joint
+            const weight = map(t, 0, 1, baseWeight * 0.5, baseWeight * 2);
+            strokeWeight(weight);
+            line(x1, y1, x2, y2);
+        }
+        
+        // Draw line from joint to end (gradually thinning)
+        for (let t = 0; t <= 1; t += 0.02) {
+            const x1 = lerp(jointX, conn.toPos.x, t);
+            const y1 = lerp(jointY, conn.toPos.y, t);
+            const x2 = lerp(jointX, conn.toPos.x, t + 0.02);
+            const y2 = lerp(jointY, conn.toPos.y, t + 0.02);
+            
+            // Weight decreases as we move away from the joint
+            const weight = map(t, 0, 1, baseWeight * 2, baseWeight * 0.5);
+            strokeWeight(weight);
+            line(x1, y1, x2, y2);
+        }
         
         // Draw joint point
         noStroke();
         fill(0, alpha);
-        circle(jointX, jointY, 5);
+        circle(jointX, jointY, baseWeight * 2); // Joint size proportional to line weight
     }
 }
 
