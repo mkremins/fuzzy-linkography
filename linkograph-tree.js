@@ -120,11 +120,11 @@ function drawConnections() {
         
         // Calculate joint position (elbow)
         const jointX = (conn.fromPos.x + conn.toPos.x) / 2;
-        const jointY = conn.fromPos.y - ((conn.toPos.x - conn.fromPos.x) / 2);
+        const jointY = conn.fromPos.y + ((conn.toPos.x - conn.fromPos.x) / 2);
         
         // Map strength to visual properties
         const alpha = map(strength, MIN_LINK_STRENGTH, 1, 50, 255);
-        const weight = map(strength, MIN_LINK_STRENGTH, 1, 1, 2);
+        const weight = map(strength, MIN_LINK_STRENGTH, 1, 2, 4);
         
         // Draw connection lines
         stroke(0, alpha);
@@ -137,7 +137,7 @@ function drawConnections() {
         // Draw joint point
         noStroke();
         fill(0, alpha);
-        circle(jointX, jointY, 3);
+        circle(jointX, jointY, 5);
     }
 }
 
