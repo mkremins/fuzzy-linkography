@@ -238,11 +238,86 @@ function makeLinkObjects(props) {
 	return {linkLines, linkJoints};
 }
 
+// Export data functionality
+function exportLinkographData(episode) {
+	// Extract necessary connection information
+	const connections = [];
+	
+	// Iterate through all connections
+	for (const [currIdx, linkSet] of Object.entries(episode.links)) {
+		for (const [prevIdx, strength] of Object.entries(linkSet)) {
+			if (strength >= MIN_LINK_STRENGTH) {
+				connections.push({
+					from: parseInt(prevIdx),
+					to: parseInt(currIdx),
+					strength: strength,
+					// Add position information
+					fromPos: {
+						x: (parseInt(prevIdx) * episode.moveSpacing) + INIT_X,
+						y: INIT_Y
+					},
+					toPos: {
+						x: (parseInt(currIdx) * episode.moveSpacing) + INIT_X,
+						y: INIT_Y
+					}
+				});
+			}
+		}
+	}
+
+	return {
+		title: episode.title,
+		moves: episode.moves.map((move, idx) => ({
+			id: idx,
+			text: move.text,
+			position: {
+				x: (idx * episode.moveSpacing) + INIT_X,
+				y: INIT_Y
+			},
+			backlinkIndex: move.backlinkIndex,
+			forelinkIndex: move.forelinkIndex
+		})),
+		connections: connections,
+		metadata: {
+			moveSpacing: episode.moveSpacing,
+			maxForelinkIndex: episode.maxForelinkIndex,
+			maxBacklinkIndex: episode.maxBacklinkIndex,
+			graphWidth: GRAPH_WIDTH,
+			initX: INIT_X,
+			initY: INIT_Y
+		}
+	};
+}
+
+// Add export button component
+function ExportButton(props) {
+	return e("button", {
+		onClick: () => {
+			const data = exportLinkographData(props.episode);
+			const blob = new Blob(
+				[JSON.stringify(data, null, 2)], 
+				{type: 'application/json'}
+			);
+			const a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = `linkograph_${props.episode.title}.json`;
+			a.click();
+		},
+		style: {
+			marginLeft: '10px',
+			padding: '5px 10px'
+		}
+	}, "Export Data");
+}
+
 function FuzzyLinkograph(props) {
 	const dividers = makeTimelineDividers(props);
 	const {linkLines, linkJoints} = makeLinkObjects(props);
 	return e("div", {className: "fuzzy-linkograph"},
-		e("h2", {}, props.title),
+		e("div", {style: {display: 'flex', alignItems: 'center'}},
+			e("h2", {style: {margin: 0}}, props.title),
+			e(ExportButton, {episode: props})
+		),
 		e("svg", {viewBox: `0 0 ${GRAPH_WIDTH} ${(GRAPH_WIDTH / 2) + INIT_Y}`},
 			...dividers,
 			...linkLines.sort((a, b) => a.strength - b.strength).map(line => {
