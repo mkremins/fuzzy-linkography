@@ -1,4 +1,5 @@
 let linkographData = null;
+let fileSelect;
 
 // Constants from app.js
 const GRAPH_WIDTH = 1000;
@@ -7,15 +8,55 @@ const INIT_Y = 500;
 const MOVE_LINK_BAR_HEIGHT = 40;
 const MIN_LINK_STRENGTH = 0.35;
 
+// File handling
+async function loadAvailableFiles() {
+    try {
+        // Fetch the list of files from the directory
+        const response = await fetch('/api/list-files');
+        const files = await response.json();
+        
+        // Get the select element
+        fileSelect = document.getElementById('fileSelect');
+        
+        // Add options for each file
+        files.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file;
+            option.textContent = file.replace('.json', '').replace('linkograph_', '');
+            fileSelect.appendChild(option);
+        });
+        
+        // Load last selected file from localStorage
+        const lastSelected = localStorage.getItem('lastSelectedFile');
+        if (lastSelected && files.includes(lastSelected)) {
+            fileSelect.value = lastSelected;
+            loadFile(lastSelected);
+        }
+    } catch (error) {
+        console.error('Error loading file list:', error);
+    }
+}
+
+async function loadFile(filename) {
+    try {
+        const response = await fetch(`/linkograph_data/${filename}`);
+        linkographData = await response.json();
+        // Save selection to localStorage
+        localStorage.setItem('lastSelectedFile', filename);
+        redraw();
+    } catch (error) {
+        console.error('Error loading file:', error);
+    }
+}
+
+// P5.js setup and event handlers
 window.onload = () => {
-    document.getElementById('fileInput').addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            linkographData = JSON.parse(e.target.result);
-            redraw();
-        };
-        reader.readAsText(file);
+    loadAvailableFiles();
+    
+    document.getElementById('fileSelect').addEventListener('change', (event) => {
+        if (event.target.value) {
+            loadFile(event.target.value);
+        }
     });
 }
 
