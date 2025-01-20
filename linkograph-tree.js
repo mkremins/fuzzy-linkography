@@ -183,6 +183,10 @@ function drawLeaf(x, y, size, angle) {
 function drawConnections() {
     if (!linkographData.connections) return;
     
+    // fix random seed
+    const seed = linkographData.connections.length;
+    randomSeed(seed);
+    
     const sortedConnections = [...linkographData.connections]
         .sort((a, b) => a.strength - b.strength);
     
