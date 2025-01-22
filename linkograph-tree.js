@@ -24,8 +24,13 @@ let PARAMS = {
     leafAngleRange: 60,
     
     // Color Parameters
-    leafColor: {
+    leafColorLeft: {
         color: { r: 80, g: 120, b: 40 },
+        variance: 20,
+        alpha: 200
+    },
+    leafColorRight: {
+        color: { r: 120, g: 80, b: 40 },
         variance: 20,
         alpha: 200
     },
@@ -151,7 +156,7 @@ function drawLeaf(x, y, size, angle) {
     translate(x, y);
     rotate(angle);
     
-    const { color, variance, alpha } = PARAMS.leafColor;
+    const { color, variance, alpha } = PARAMS.leafColorLeft;
     const randomR = color.r + random(-variance, variance);
     const randomG = color.g + random(-variance, variance);
     const randomB = color.b + random(-variance, variance);
@@ -322,9 +327,21 @@ function setupTweakpane() {
         PARAMS = {
             ...PARAMS,  // Keep default values
             ...loadedParams,  // Override with saved values
-            leafColor: {  // Ensure color object structure is complete
-                ...PARAMS.leafColor,
-                ...(loadedParams.leafColor || {})
+            leafColorLeft: {
+                ...PARAMS.leafColorLeft,
+                ...(loadedParams.leafColorLeft || {}),
+                color: {
+                    ...(PARAMS.leafColorLeft.color),
+                    ...(loadedParams.leafColorLeft?.color || {})
+                }
+            },
+            leafColorRight: {
+                ...PARAMS.leafColorRight,
+                ...(loadedParams.leafColorRight || {}),
+                color: {
+                    ...(PARAMS.leafColorRight.color),
+                    ...(loadedParams.leafColorRight?.color || {})
+                }
             }
         };
     }
@@ -358,14 +375,23 @@ function setupTweakpane() {
     leafAngleFolder.addInput(PARAMS, 'leafBaseAngle', { min: 0, max: 90 });
     leafAngleFolder.addInput(PARAMS, 'leafAngleVariance', { min: 0, max: 45 });
     
-    // Color folder
-    const colorFolder = pane.addFolder({ title: 'Leaf Color' });
-    colorFolder.addInput(PARAMS.leafColor, 'color', { 
+    // Left Leaf Color folder
+    const leftColorFolder = pane.addFolder({ title: 'Left Leaf Color' });
+    leftColorFolder.addInput(PARAMS.leafColorLeft, 'color', { 
         view: 'color',
         label: 'Color'
     });
-    colorFolder.addInput(PARAMS.leafColor, 'variance', { min: 0, max: 50 });
-    colorFolder.addInput(PARAMS.leafColor, 'alpha', { min: 0, max: 255 });
+    leftColorFolder.addInput(PARAMS.leafColorLeft, 'variance', { min: 0, max: 50 });
+    leftColorFolder.addInput(PARAMS.leafColorLeft, 'alpha', { min: 0, max: 255 });
+    
+    // Right Leaf Color folder
+    const rightColorFolder = pane.addFolder({ title: 'Right Leaf Color' });
+    rightColorFolder.addInput(PARAMS.leafColorRight, 'color', { 
+        view: 'color',
+        label: 'Color'
+    });
+    rightColorFolder.addInput(PARAMS.leafColorRight, 'variance', { min: 0, max: 50 });
+    rightColorFolder.addInput(PARAMS.leafColorRight, 'alpha', { min: 0, max: 255 });
     
     // Save button
     pane.addButton({ title: 'Save Settings' }).on('click', () => {
