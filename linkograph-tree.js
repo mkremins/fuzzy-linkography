@@ -121,7 +121,7 @@ function draw() {
 
     background(255);
     
-    // Draw timeline dividers first
+    // timeline dividers  (Currently not used)
     drawTimelineDividers();
     
     // Draw connections
@@ -277,7 +277,8 @@ function drawMoves() {
                 PARAMS.moveLinkBarHeight
             );
             noStroke();
-            fill('#998ec3');
+            const leftColor = PARAMS.leafColorLeft.color;
+            fill(leftColor.r, leftColor.g, leftColor.b);  
             rect(x - 5, y - 10 - barHeight, 5, barHeight);
         }
         
@@ -290,7 +291,8 @@ function drawMoves() {
                 PARAMS.moveLinkBarHeight
             );
             noStroke();
-            fill('#f1a340');
+            const rightColor = PARAMS.leafColorRight.color;
+            fill(rightColor.r, rightColor.g, rightColor.b);   
             rect(x, y - 10 - barHeight, 5, barHeight);
         }
         
