@@ -153,12 +153,13 @@ function drawTimelineDividers() {
     drawingContext.setLineDash([]); // Reset dash pattern
 }
 
-function drawLeaf(x, y, size, angle) {
+function drawLeaf(x, y, size, angle, isLeft) {
     push();
     translate(x, y);
     rotate(angle);
     
-    const { color, variance, alpha } = PARAMS.leafColorLeft;
+    const leafColor = isLeft ? PARAMS.leafColorLeft : PARAMS.leafColorRight;
+    const { color, variance, alpha } = leafColor;
     const randomR = color.r + random(-variance, variance);
     const randomG = color.g + random(-variance, variance);
     const randomB = color.b + random(-variance, variance);
@@ -224,10 +225,11 @@ function drawConnections() {
                 const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                     PARAMS.leafSizeMin, PARAMS.leafSizeMax);
                 const branchAngle = atan2(conn.fromPos.y - jointY, conn.fromPos.x - jointX);  
+                const isLeft = random() < 0.5;
                 const leafAngle = branchAngle + 
-                    (random() < 0.5 ? 45 : -45) +
+                    (isLeft ? -45 : 45) +
                     random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
-                drawLeaf(x1, y1, leafSize, leafAngle);
+                drawLeaf(x1, y1, leafSize, leafAngle, isLeft);
             }
         }
         
@@ -248,10 +250,11 @@ function drawConnections() {
                 const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                     PARAMS.leafSizeMin, PARAMS.leafSizeMax);
                 const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
+                const isLeft = random() < 0.5;
                 const leafAngle = branchAngle + 
-                    (random() < 0.5 ? 45 : -45) +
+                    (isLeft ? -45 : 45) +
                     random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
-                drawLeaf(x1, y1, leafSize, leafAngle);
+                drawLeaf(x1, y1, leafSize, leafAngle, isLeft);
             }
         }
         
