@@ -123,7 +123,7 @@ function draw() {
 
     background(255);
     
-    // timeline dividers  (Currently not used)
+    // timeline dividers 
     drawTimelineDividers();
     
     // Draw connections

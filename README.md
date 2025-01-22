@@ -84,3 +84,7 @@ Top-level values may also contain precomputed links between design moves, in whi
 ```
 
 Within `links`, top-level and second-level keys both represent indexes of moves in the associated `moves` array. Each value represents the strength of the link between the top-level and second-level moves. Only *backlinks* are actually stored – i.e., we only explicitly calculate each move's association with the moves *before* it, since the forelinks are symmetrical.
+
+
+## Known Issues
+- Bar heights for forelinks and backlinks are currently normalized separately against their respective maximum values, which may not accurately represent their relative strengths. A global normalization across both types would better preserve the true relationship between link strengths.
