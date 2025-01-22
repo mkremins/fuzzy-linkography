@@ -3,10 +3,12 @@ let fileSelect;
 let pane;
 let PARAMS = {
     // Visualization Parameters
-    graphWidth: 1000,
-    initX: 10,
-    initY: 500,
+    //graphWidth: 1000,
+    //initX: 10,
+    //initY: 500,
     moveLinkBarHeight: 40,
+    moveDistance: 5,
+    moveBarDistance: 5,
     
     // Link Parameters
     minLinkStrength: 0.35,
@@ -279,7 +281,7 @@ function drawMoves() {
             noStroke();
             const leftColor = PARAMS.leafColorLeft.color;
             fill(leftColor.r, leftColor.g, leftColor.b);  
-            rect(x - 5, y - 10 - barHeight, 5, barHeight);
+            rect(x - 5, y - 10 - barHeight - PARAMS.moveBarDistance, 5, barHeight);
         }
         
         if (move.forelinkIndex) {
@@ -293,7 +295,7 @@ function drawMoves() {
             noStroke();
             const rightColor = PARAMS.leafColorRight.color;
             fill(rightColor.r, rightColor.g, rightColor.b);   
-            rect(x, y - 10 - barHeight, 5, barHeight);
+            rect(x, y - 10 - barHeight - PARAMS.moveBarDistance, 5, barHeight);
         }
         
         // Draw move point
@@ -306,7 +308,7 @@ function drawMoves() {
         textSize(12);
         textAlign(LEFT, CENTER);
         push();
-        translate(x + 5, y - PARAMS.moveLinkBarHeight - 20);
+        translate(x + 5, y - PARAMS.moveLinkBarHeight - PARAMS.moveDistance -  PARAMS.moveBarDistance -10);
         rotate(-90);
         text(move.text, 0, 0);
         pop();
@@ -350,11 +352,12 @@ function setupTweakpane() {
     
     // Visualization folder
     const vizFolder = pane.addFolder({ title: 'Visualization' });
-    vizFolder.addInput(PARAMS, 'graphWidth', { min: 500, max: 2000 });
-    vizFolder.addInput(PARAMS, 'initX', { min: 0, max: 50 });
-    vizFolder.addInput(PARAMS, 'initY', { min: 100, max: 1000 });
+    //vizFolder.addInput(PARAMS, 'graphWidth', { min: 500, max: 2000 });
+    //vizFolder.addInput(PARAMS, 'initX', { min: 0, max: 50 });
+    //vizFolder.addInput(PARAMS, 'initY', { min: 100, max: 1000 });
     vizFolder.addInput(PARAMS, 'moveLinkBarHeight', { min: 20, max: 100 });
-    
+    vizFolder.addInput(PARAMS, 'moveDistance', { min: 1, max: 60 });
+    vizFolder.addInput(PARAMS, 'moveBarDistance', { min: 1, max: 60 });
     // Link folder
     const linkFolder = pane.addFolder({ title: 'Links' });
     linkFolder.addInput(PARAMS, 'minLinkStrength', { min: 0, max: 1 });
