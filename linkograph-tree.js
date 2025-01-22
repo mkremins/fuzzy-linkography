@@ -25,9 +25,7 @@ let PARAMS = {
     
     // Color Parameters
     leafColor: {
-        r: 80,
-        g: 120,
-        b: 40,
+        color: { r: 80, g: 120, b: 40 },
         variance: 20,
         alpha: 200
     },
@@ -153,10 +151,10 @@ function drawLeaf(x, y, size, angle) {
     translate(x, y);
     rotate(angle);
     
-    const { r, g, b, variance, alpha } = PARAMS.leafColor;
-    const randomR = r + random(-variance, variance);
-    const randomG = g + random(-variance, variance);
-    const randomB = b + random(-variance, variance);
+    const { color, variance, alpha } = PARAMS.leafColor;
+    const randomR = color.r + random(-variance, variance);
+    const randomG = color.g + random(-variance, variance);
+    const randomB = color.b + random(-variance, variance);
     
     fill(randomR, randomG, randomB, alpha);
     noStroke();
@@ -350,8 +348,8 @@ function setupTweakpane() {
     const styleFolder = pane.addFolder({ title: 'Style' });
     styleFolder.addInput(PARAMS, 'baseWeightMin', { min: 1, max: 10 });
     styleFolder.addInput(PARAMS, 'baseWeightMax', { min: 1, max: 20 });
-    styleFolder.addInput(PARAMS, 'leafSizeMin', { min: 1, max: 20 });
-    styleFolder.addInput(PARAMS, 'leafSizeMax', { min: 1, max: 40 });
+    styleFolder.addInput(PARAMS, 'leafSizeMin', { min: 1, max: 40 });
+    styleFolder.addInput(PARAMS, 'leafSizeMax', { min: 1, max: 60 });
     styleFolder.addInput(PARAMS, 'leafDensity', { min: 0, max: 1 });
     styleFolder.addInput(PARAMS, 'leafAngleRange', { min: 0, max: 90 });
     
@@ -362,9 +360,10 @@ function setupTweakpane() {
     
     // Color folder
     const colorFolder = pane.addFolder({ title: 'Leaf Color' });
-    colorFolder.addInput(PARAMS.leafColor, 'r', { min: 0, max: 255, label: 'Red' });
-    colorFolder.addInput(PARAMS.leafColor, 'g', { min: 0, max: 255, label: 'Green' });
-    colorFolder.addInput(PARAMS.leafColor, 'b', { min: 0, max: 255, label: 'Blue' });
+    colorFolder.addInput(PARAMS.leafColor, 'color', { 
+        view: 'color',
+        label: 'Color'
+    });
     colorFolder.addInput(PARAMS.leafColor, 'variance', { min: 0, max: 50 });
     colorFolder.addInput(PARAMS.leafColor, 'alpha', { min: 0, max: 255 });
     
