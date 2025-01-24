@@ -459,6 +459,20 @@ function setupTweakpane() {
         label: 'Max Multiplier'
     });
     
+    // Animation Controls
+    const animFolder = pane.addFolder({ title: 'Animation' });
+    animFolder.addInput(ANIMATION_CONFIG, 'duration', {
+        min: 0,
+        max: 3000,
+        step: 100,
+        label: 'Duration (ms)'
+    });
+    
+    animFolder.addButton({ title: 'Play Animation' })
+        .on('click', () => {
+            startAnimation();
+        });
+    
     // Save button
     pane.addButton({ title: 'Save Settings' }).on('click', () => {
         localStorage.setItem('linkographParams', JSON.stringify(PARAMS));
@@ -474,4 +488,77 @@ function setupTweakpane() {
     pane.on('change', () => {
         redraw();
     });
+}
+
+const ANIMATION_CONFIG = {
+    duration: 3000,  // Animation duration in milliseconds
+    isPlaying: false,
+    startTime: 0,
+    // Define parameters to animate
+    targets: [
+        {
+            param: 'baseWeightMax',     // Parameter name in PARAMS
+            startValue: 0,            // Initial value
+            endValue: null,           // null means use current value
+        },
+ 
+        {
+            param: 'leafSizeMin',     // Parameter name in PARAMS
+            startValue: 0,            // Initial value
+            endValue: null,           // null means use current value
+        },
+        {
+            param: 'leafSizeMax',     // Parameter name in PARAMS
+            startValue: 0,            // Initial value
+            endValue: null,           // null means use current value
+        },
+        {
+            param: 'leafAngleRange',     // Parameter name in PARAMS
+            startValue: 0,            // Initial value
+            endValue: null,           // null means use current value
+        },
+        // Add more parameters as needed
+    ]
+};
+
+function startAnimation() {
+    // Save target values
+    ANIMATION_CONFIG.targets.forEach(target => {
+        target.endValue = PARAMS[target.param];
+        PARAMS[target.param] = target.startValue;
+    });
+    
+    ANIMATION_CONFIG.isPlaying = true;
+    ANIMATION_CONFIG.startTime = Date.now();
+    requestAnimationFrame(updateAnimation);
+}
+
+function updateAnimation() {
+    if (!ANIMATION_CONFIG.isPlaying) return;
+    
+    const currentTime = Date.now();
+    const elapsed = currentTime - ANIMATION_CONFIG.startTime;
+    const progress = Math.min(elapsed / ANIMATION_CONFIG.duration, 1);
+    
+    // Update each target parameter
+    ANIMATION_CONFIG.targets.forEach(target => {
+        PARAMS[target.param] = lerp(
+            target.startValue,
+            target.endValue,
+            progress
+        );
+    });
+    
+    redraw();  // Redraw the scene
+    
+    if (progress < 1) {
+        requestAnimationFrame(updateAnimation);
+    } else {
+        ANIMATION_CONFIG.isPlaying = false;
+    }
+}
+
+// Helper function
+function lerp(start, end, t) {
+    return start + (end - start) * t;
 } 
