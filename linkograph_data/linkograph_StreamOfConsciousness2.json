@@ -1,0 +1,380 @@
+{
+  "title": "StreamOfConsciousness2",
+  "moves": [
+    {
+      "id": 0,
+      "text": "a phrase",
+      "position": {
+        "x": 10,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.12223655299086447
+    },
+    {
+      "id": 1,
+      "text": "streetlights",
+      "position": {
+        "x": 70,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.9083914631004548
+    },
+    {
+      "id": 2,
+      "text": "LED",
+      "position": {
+        "x": 130,
+        "y": 500
+      },
+      "backlinkIndex": 0.37905673044067,
+      "forelinkIndex": 0.6993664230163492
+    },
+    {
+      "id": 3,
+      "text": "ceiling fixture",
+      "position": {
+        "x": 190,
+        "y": 500
+      },
+      "backlinkIndex": 0.08824031407738746,
+      "forelinkIndex": 0.07549591077247696
+    },
+    {
+      "id": 4,
+      "text": "buzzing",
+      "position": {
+        "x": 250,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 5,
+      "text": "Christmas lights",
+      "position": {
+        "x": 310,
+        "y": 500
+      },
+      "backlinkIndex": 0.7961457583971981,
+      "forelinkIndex": 0.14127371826519353
+    },
+    {
+      "id": 6,
+      "text": "giant skeleton",
+      "position": {
+        "x": 370,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 7,
+      "text": "trains",
+      "position": {
+        "x": 430,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.6070237918261544
+    },
+    {
+      "id": 8,
+      "text": "railroad tracks",
+      "position": {
+        "x": 490,
+        "y": 500
+      },
+      "backlinkIndex": 0.6070237918261544,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 9,
+      "text": "Alfred Hitchcock",
+      "position": {
+        "x": 550,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.2657248196358968
+    },
+    {
+      "id": 10,
+      "text": "cinematography",
+      "position": {
+        "x": 610,
+        "y": 500
+      },
+      "backlinkIndex": 0.2657248196358968,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 11,
+      "text": "The Fall",
+      "position": {
+        "x": 670,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 12,
+      "text": "red",
+      "position": {
+        "x": 730,
+        "y": 500
+      },
+      "backlinkIndex": 0.4076081119405035,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 13,
+      "text": "billowing cloth",
+      "position": {
+        "x": 790,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 14,
+      "text": "lens flare",
+      "position": {
+        "x": 850,
+        "y": 500
+      },
+      "backlinkIndex": 0.007324467549343947,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 15,
+      "text": "Industrial Light and Magic",
+      "position": {
+        "x": 910,
+        "y": 500
+      },
+      "backlinkIndex": 0.26838868574023605,
+      "forelinkIndex": 0
+    },
+    {
+      "id": 16,
+      "text": "blue screen",
+      "position": {
+        "x": 970,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0
+    }
+  ],
+  "connections": [
+    {
+      "from": 0,
+      "to": 2,
+      "strength": 0.41333490946467044,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 130,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "strength": 0.533051965321765,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 130,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "strength": 0.4073562041503018,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 190,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 5,
+      "strength": 0.6695705337344963,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "strength": 0.4988518672215725,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 5,
+      "strength": 0.39907234200211,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "strength": 0.7445654646870004,
+      "fromPos": {
+        "x": 430,
+        "y": 500
+      },
+      "toPos": {
+        "x": 490,
+        "y": 500
+      }
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "strength": 0.5227211327633329,
+      "fromPos": {
+        "x": 550,
+        "y": 500
+      },
+      "toPos": {
+        "x": 610,
+        "y": 500
+      }
+    },
+    {
+      "from": 0,
+      "to": 12,
+      "strength": 0.3661188499793914,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 730,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 12,
+      "strength": 0.369752226837142,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 730,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 12,
+      "strength": 0.5790741959447938,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 730,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 14,
+      "strength": 0.35476090390707354,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 850,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 15,
+      "strength": 0.41331882121481883,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 15,
+      "strength": 0.36930590764395876,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 5,
+      "to": 15,
+      "strength": 0.44182791687237577,
+      "fromPos": {
+        "x": 310,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    }
+  ],
+  "metadata": {
+    "moveSpacing": 60,
+    "maxForelinkIndex": 0.9083914631004548,
+    "maxBacklinkIndex": 0.7961457583971981,
+    "graphWidth": 1000,
+    "initX": 10,
+    "initY": 500
+  }
+}

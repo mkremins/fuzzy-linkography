@@ -92,6 +92,9 @@ async function loadFile(filename) {
         linkographData = await response.json();
         // Save selection to localStorage
         localStorage.setItem('lastSelectedFile', filename);
+        
+        // Start animation after loading new data
+        startAnimation();
         redraw();
     } catch (error) {
         console.error('Error loading file:', error);
@@ -491,7 +494,7 @@ function setupTweakpane() {
 }
 
 const ANIMATION_CONFIG = {
-    duration: 3000,  // Animation duration in milliseconds
+    duration: 500,  // Animation duration in milliseconds
     isPlaying: false,
     startTime: 0,
     // Define parameters to animate
