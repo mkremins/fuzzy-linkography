@@ -41,6 +41,10 @@ let PARAMS = {
     leafBaseAngle: 45,  // Base angle for leaf growth
     leafAngleVariance: 15,  // How much the angle can vary
     showLeaves: true,  // default to show leaves
+    
+    // Leaf Density Range
+    leafDensityMin: 0.5,  // minimum density multiplier
+    leafDensityMax: 2.0,  // maximum density multiplier
 };
 
 // Constants from app.js
@@ -187,7 +191,14 @@ function drawLeaf(x, y, size, angle, isLeft) {
     pop();
 }
 
-function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoint) {
+function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoint, moveData) {
+   
+   // console.log('Branch Data:', {
+   //     moveData,
+   //     strength,
+   //     isFromJoint
+   // });
+
     const branchAngle = atan2(endY - startY, endX - startX);
     
     for (let t = 0; t <= 1; t += 0.02) {
@@ -203,17 +214,47 @@ function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoin
         // generate leaves
         if (strength >= PARAMS.leafThreshold && 
             t > 1 - PARAMS.leafZone && 
-            random() < PARAMS.leafDensity &&
             PARAMS.showLeaves) {
             
             const isLeft = random() < 0.5;
-            const leafSize = map(strength, PARAMS.leafThreshold, 1, 
-                PARAMS.leafSizeMin, PARAMS.leafSizeMax);
-            const leafAngle = branchAngle + 
-                (isLeft ? -45 : 45) +
-                random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
             
-            drawLeaf(x1, y1, leafSize, leafAngle, isLeft);
+            // density calculation
+            let densityMultiplier = 1;
+            if (moveData) {
+                const linkIndex = isLeft ? moveData.backlinkIndex : moveData.forelinkIndex;
+                const maxIndex = isLeft ? 
+                    linkographData.metadata.maxBacklinkIndex : 
+                    linkographData.metadata.maxForelinkIndex;
+                
+                console.log('Density Calculation:', {
+                    isLeft,
+                    linkIndex,
+                    maxIndex,
+                    beforeMap: densityMultiplier
+                });
+                
+                densityMultiplier = map(linkIndex, 0, maxIndex, 
+                    PARAMS.leafDensityMin, 
+                    PARAMS.leafDensityMax
+                );
+                
+                console.log('After mapping:', {
+                    densityMultiplier,
+                    min: PARAMS.leafDensityMin,
+                    max: PARAMS.leafDensityMax
+                });
+            }
+            
+            // apply density
+            if (random() < PARAMS.leafDensity * densityMultiplier) {
+                const leafSize = map(strength, PARAMS.leafThreshold, 1, 
+                    PARAMS.leafSizeMin, PARAMS.leafSizeMax);
+                const leafAngle = branchAngle + 
+                    (isLeft ? 45 : -45) +
+                    random(-PARAMS.leafAngleRange/4, PARAMS.leafAngleRange/4);
+                
+                drawLeaf(x1, y1, leafSize, leafAngle, isLeft);
+            }
         }
     }
 }
@@ -229,6 +270,8 @@ function drawConnections() {
         .sort((a, b) => a.strength - b.strength);
     
     for (const conn of sortedConnections) {
+        //console.log('Raw Connection:', conn);  
+        
         const strength = conn.strength;
         if (strength < PARAMS.minLinkStrength) continue;
         
@@ -240,12 +283,20 @@ function drawConnections() {
             PARAMS.baseWeightMin, PARAMS.baseWeightMax);
         
         stroke(0, alpha);
+
+        // get move data
+        const fromMove = linkographData.moves[conn.from]; 
+        const toMove = linkographData.moves[conn.to];      
         
-        // draw first branch (from joint to start)
-        drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true);
+        console.log('Connection Data:', {
+            from: conn.from,
+            to: conn.to,
+            fromMove,
+            toMove
+        });
         
-        // draw second branch (from joint to end)
-        drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true);
+        drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove);
+        drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove);
         
         // draw joint point
         noStroke();
@@ -392,6 +443,21 @@ function setupTweakpane() {
     });
     rightColorFolder.addInput(PARAMS.leafColorRight, 'variance', { min: 0, max: 50 });
     rightColorFolder.addInput(PARAMS.leafColorRight, 'alpha', { min: 0, max: 255 });
+    
+    // leaf density folder
+    const densityFolder = pane.addFolder({ title: 'Leaf Density' });
+    densityFolder.addInput(PARAMS, 'leafDensityMin', {
+        min: 0,
+        max: 1,
+        step: 0.1,
+        label: 'Min Multiplier'
+    });
+    densityFolder.addInput(PARAMS, 'leafDensityMax', {
+        min: 1,
+        max: 4,
+        step: 0.1,
+        label: 'Max Multiplier'
+    });
     
     // Save button
     pane.addButton({ title: 'Save Settings' }).on('click', () => {
