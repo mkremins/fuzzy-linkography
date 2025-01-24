@@ -1,0 +1,757 @@
+{
+  "title": "StreamOfConsciousness1",
+  "moves": [
+    {
+      "id": 0,
+      "text": "hello",
+      "position": {
+        "x": 10,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 1.4816617269857393
+    },
+    {
+      "id": 1,
+      "text": "hello world",
+      "position": {
+        "x": 70,
+        "y": 500
+      },
+      "backlinkIndex": 0.569384320355283,
+      "forelinkIndex": 1.209287652489171
+    },
+    {
+      "id": 2,
+      "text": "dog",
+      "position": {
+        "x": 130,
+        "y": 500
+      },
+      "backlinkIndex": 0.011205501493153785,
+      "forelinkIndex": 1.3941368972222037
+    },
+    {
+      "id": 3,
+      "text": "cat",
+      "position": {
+        "x": 190,
+        "y": 500
+      },
+      "backlinkIndex": 0.47537996901982765,
+      "forelinkIndex": 2.440318427285154
+    },
+    {
+      "id": 4,
+      "text": "zebra",
+      "position": {
+        "x": 250,
+        "y": 500
+      },
+      "backlinkIndex": 0.23363856811294867,
+      "forelinkIndex": 0.29966650745315426
+    },
+    {
+      "id": 5,
+      "text": "horse",
+      "position": {
+        "x": 310,
+        "y": 500
+      },
+      "backlinkIndex": 0.5871003875036775,
+      "forelinkIndex": 0.47291894520406486
+    },
+    {
+      "id": 6,
+      "text": "hello horse world",
+      "position": {
+        "x": 370,
+        "y": 500
+      },
+      "backlinkIndex": 1.2848052705512565,
+      "forelinkIndex": 0.28416099664464944
+    },
+    {
+      "id": 7,
+      "text": "hello kitty",
+      "position": {
+        "x": 430,
+        "y": 500
+      },
+      "backlinkIndex": 1.6867713581831487,
+      "forelinkIndex": 1.622071126034407
+    },
+    {
+      "id": 8,
+      "text": "stream of consciousness",
+      "position": {
+        "x": 490,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.3008316932370549
+    },
+    {
+      "id": 9,
+      "text": "kitty cat",
+      "position": {
+        "x": 550,
+        "y": 500
+      },
+      "backlinkIndex": 1.8631574403272433,
+      "forelinkIndex": 1.2024031824641948
+    },
+    {
+      "id": 10,
+      "text": "not much money in the kitty",
+      "position": {
+        "x": 610,
+        "y": 500
+      },
+      "backlinkIndex": 0.6294732113431942,
+      "forelinkIndex": 0.14524632853589342
+    },
+    {
+      "id": 11,
+      "text": "piggy bank",
+      "position": {
+        "x": 670,
+        "y": 500
+      },
+      "backlinkIndex": 0,
+      "forelinkIndex": 0.24124229230023544
+    },
+    {
+      "id": 12,
+      "text": "riverbank",
+      "position": {
+        "x": 730,
+        "y": 500
+      },
+      "backlinkIndex": 0.24124229230023544,
+      "forelinkIndex": 0.14682453718786062
+    },
+    {
+      "id": 13,
+      "text": "stream",
+      "position": {
+        "x": 790,
+        "y": 500
+      },
+      "backlinkIndex": 0.3448327636118111,
+      "forelinkIndex": 0.8006783737241168
+    },
+    {
+      "id": 14,
+      "text": "video stream",
+      "position": {
+        "x": 850,
+        "y": 500
+      },
+      "backlinkIndex": 0.7642847590745582,
+      "forelinkIndex": 0.35551210548620116
+    },
+    {
+      "id": 15,
+      "text": "cat video",
+      "position": {
+        "x": 910,
+        "y": 500
+      },
+      "backlinkIndex": 1.6802731458080744,
+      "forelinkIndex": 0.19344765279500456
+    },
+    {
+      "id": 16,
+      "text": "hello kitty tv show",
+      "position": {
+        "x": 970,
+        "y": 500
+      },
+      "backlinkIndex": 2.218859457364693,
+      "forelinkIndex": 0
+    }
+  ],
+  "connections": [
+    {
+      "from": 0,
+      "to": 1,
+      "strength": 0.7200998082309339,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 70,
+        "y": 500
+      }
+    },
+    {
+      "from": 0,
+      "to": 2,
+      "strength": 0.35728357597054994,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 130,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "strength": 0.658996979862888,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 190,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "strength": 0.393683601282862,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "strength": 0.4581814679905546,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 250,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "strength": 0.5464720431348142,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 5,
+      "strength": 0.41770080461360154,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "strength": 0.46744240412897453,
+      "fromPos": {
+        "x": 250,
+        "y": 500
+      },
+      "toPos": {
+        "x": 310,
+        "y": 500
+      }
+    },
+    {
+      "from": 0,
+      "to": 6,
+      "strength": 0.5354147080429129,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 370,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 6,
+      "strength": 0.6923114034327617,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 370,
+        "y": 500
+      }
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "strength": 0.6573973143826422,
+      "fromPos": {
+        "x": 310,
+        "y": 500
+      },
+      "toPos": {
+        "x": 370,
+        "y": 500
+      }
+    },
+    {
+      "from": 0,
+      "to": 7,
+      "strength": 0.6591406703667437,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 7,
+      "strength": 0.6348660919080726,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 7,
+      "strength": 0.4432561851808472,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 7,
+      "strength": 0.6302497857308607,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 4,
+      "to": 7,
+      "strength": 0.3636843887080025,
+      "fromPos": {
+        "x": 250,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "strength": 0.46520426092451983,
+      "fromPos": {
+        "x": 370,
+        "y": 500
+      },
+      "toPos": {
+        "x": 430,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 9,
+      "strength": 0.5604800402966836,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 9,
+      "strength": 0.8952926561292305,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "from": 4,
+      "to": 9,
+      "strength": 0.41365643700757315,
+      "fromPos": {
+        "x": 250,
+        "y": 500
+      },
+      "toPos": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "from": 7,
+      "to": 9,
+      "strength": 0.7416232027792208,
+      "fromPos": {
+        "x": 430,
+        "y": 500
+      },
+      "toPos": {
+        "x": 550,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 10,
+      "strength": 0.4484430019476024,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 610,
+        "y": 500
+      }
+    },
+    {
+      "from": 7,
+      "to": 10,
+      "strength": 0.4621607737355486,
+      "fromPos": {
+        "x": 430,
+        "y": 500
+      },
+      "toPos": {
+        "x": 610,
+        "y": 500
+      }
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "strength": 0.5485538116899252,
+      "fromPos": {
+        "x": 550,
+        "y": 500
+      },
+      "toPos": {
+        "x": 610,
+        "y": 500
+      }
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "strength": 0.506807489995153,
+      "fromPos": {
+        "x": 670,
+        "y": 500
+      },
+      "toPos": {
+        "x": 730,
+        "y": 500
+      }
+    },
+    {
+      "from": 8,
+      "to": 13,
+      "strength": 0.4787053471755678,
+      "fromPos": {
+        "x": 490,
+        "y": 500
+      },
+      "toPos": {
+        "x": 790,
+        "y": 500
+      }
+    },
+    {
+      "from": 12,
+      "to": 13,
+      "strength": 0.4454359491721094,
+      "fromPos": {
+        "x": 730,
+        "y": 500
+      },
+      "toPos": {
+        "x": 790,
+        "y": 500
+      }
+    },
+    {
+      "from": 8,
+      "to": 14,
+      "strength": 0.41683525342851785,
+      "fromPos": {
+        "x": 490,
+        "y": 500
+      },
+      "toPos": {
+        "x": 850,
+        "y": 500
+      }
+    },
+    {
+      "from": 13,
+      "to": 14,
+      "strength": 0.7799498399699449,
+      "fromPos": {
+        "x": 790,
+        "y": 500
+      },
+      "toPos": {
+        "x": 850,
+        "y": 500
+      }
+    },
+    {
+      "from": 2,
+      "to": 15,
+      "strength": 0.4033001334363372,
+      "fromPos": {
+        "x": 130,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 15,
+      "strength": 0.678747990317625,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 7,
+      "to": 15,
+      "strength": 0.43640934686645333,
+      "fromPos": {
+        "x": 430,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 9,
+      "to": 15,
+      "strength": 0.6339299937605547,
+      "fromPos": {
+        "x": 550,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 10,
+      "to": 15,
+      "strength": 0.3682161088775163,
+      "fromPos": {
+        "x": 610,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 13,
+      "to": 15,
+      "strength": 0.4404911029507309,
+      "fromPos": {
+        "x": 790,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 14,
+      "to": 15,
+      "strength": 0.5810828685660308,
+      "fromPos": {
+        "x": 850,
+        "y": 500
+      },
+      "toPos": {
+        "x": 910,
+        "y": 500
+      }
+    },
+    {
+      "from": 0,
+      "to": 16,
+      "strength": 0.4411413599295901,
+      "fromPos": {
+        "x": 10,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 1,
+      "to": 16,
+      "strength": 0.5088594787771268,
+      "fromPos": {
+        "x": 70,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 3,
+      "to": 16,
+      "strength": 0.5075912710058754,
+      "fromPos": {
+        "x": 190,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 6,
+      "to": 16,
+      "strength": 0.41950038689450225,
+      "fromPos": {
+        "x": 370,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 7,
+      "to": 16,
+      "strength": 0.8141529085411418,
+      "fromPos": {
+        "x": 430,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 9,
+      "to": 16,
+      "strength": 0.6490782631512466,
+      "fromPos": {
+        "x": 550,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 10,
+      "to": 16,
+      "strength": 0.42619400467081436,
+      "fromPos": {
+        "x": 610,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    },
+    {
+      "from": 15,
+      "to": 16,
+      "strength": 0.47574097431675294,
+      "fromPos": {
+        "x": 910,
+        "y": 500
+      },
+      "toPos": {
+        "x": 970,
+        "y": 500
+      }
+    }
+  ],
+  "metadata": {
+    "moveSpacing": 60,
+    "maxForelinkIndex": 2.440318427285154,
+    "maxBacklinkIndex": 2.218859457364693,
+    "graphWidth": 1000,
+    "initX": 10,
+    "initY": 500
+  }
+}

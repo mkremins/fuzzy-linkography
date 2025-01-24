@@ -40,6 +40,7 @@ let PARAMS = {
     // Add new leaf angle parameters
     leafBaseAngle: 45,  // Base angle for leaf growth
     leafAngleVariance: 15,  // How much the angle can vary
+    showLeaves: true,  // default to show leaves
 };
 
 // Constants from app.js
@@ -221,7 +222,8 @@ function drawConnections() {
             
             if (strength >= PARAMS.leafThreshold && 
                 t > 1 - PARAMS.leafZone && 
-                random() < PARAMS.leafDensity) {
+                random() < PARAMS.leafDensity &&
+                PARAMS.showLeaves) {
                 const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                     PARAMS.leafSizeMin, PARAMS.leafSizeMax);
                 const branchAngle = atan2(conn.fromPos.y - jointY, conn.fromPos.x - jointX);  
@@ -246,7 +248,8 @@ function drawConnections() {
             // Add leaves if strength threshold is met and in leaf zone
             if (strength >= PARAMS.leafThreshold && 
                 t > 1 - PARAMS.leafZone && 
-                random() < PARAMS.leafDensity) {
+                random() < PARAMS.leafDensity &&
+                PARAMS.showLeaves) {
                 const leafSize = map(strength, PARAMS.leafThreshold, 1, 
                     PARAMS.leafSizeMin, PARAMS.leafSizeMax);
                 const branchAngle = atan2(conn.toPos.y - jointY, conn.toPos.x - jointX);
@@ -377,6 +380,9 @@ function setupTweakpane() {
     styleFolder.addInput(PARAMS, 'leafSizeMax', { min: 1, max: 60 });
     styleFolder.addInput(PARAMS, 'leafDensity', { min: 0, max: 1 });
     styleFolder.addInput(PARAMS, 'leafAngleRange', { min: 0, max: 90 });
+    styleFolder.addInput(PARAMS, 'showLeaves', {
+        label: 'Show Leaves'
+    });
     
     // Leaf Angle folder
     const leafAngleFolder = pane.addFolder({ title: 'Leaf Angles' });
