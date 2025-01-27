@@ -47,7 +47,8 @@ let PARAMS = {
     leafDensityMax: 2.0,  // maximum density multiplier
     
     // Add branch layer control
-    branchesOnTop: false, // Default: branches behind leaves
+    branchesOnTop: false,    // Branches on top of leaves
+    branchesBehind: false,   // Branches behind leaves
     
     // Add opacity range parameters for links
     linkAlphaMin: 50,   // Default minimum opacity
@@ -55,6 +56,16 @@ let PARAMS = {
     
     // Add move point size parameter
     movePointSize: 10, // Default size for move points
+    
+    // Add new color parameters
+    branchColor: {
+        color: { r: 0, g: 0, b: 0 },  // Default black
+        alpha: 200
+    },
+    movePointColor: {
+        color: { r: 0, g: 0, b: 0 },  // Default black
+        alpha: 255
+    },
 };
 
 // Constants from app.js
@@ -268,7 +279,6 @@ function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoin
 function drawConnections() {
     if (!linkographData.connections) return;
     
-    // Fix random seed
     const seed = linkographData.connections.length;
     randomSeed(seed);
     
@@ -276,12 +286,15 @@ function drawConnections() {
         .sort((a, b) => a.strength - b.strength);
     
     if (PARAMS.branchesOnTop) {
-        // Draw leaves first
+        // Draw leaves first, then branches
         drawConnectionLeaves(sortedConnections);
-        // Then draw branches
         drawConnectionBranches(sortedConnections);
+    } else if (PARAMS.branchesBehind) {
+        // Draw branches first, then leaves
+        drawConnectionBranches(sortedConnections);
+        drawConnectionLeaves(sortedConnections);
     } else {
-        // Draw in original order
+        // Interleaved mode (original behavior)
         drawConnectionBranches(sortedConnections);
     }
 }
@@ -325,7 +338,9 @@ function drawConnectionBranches(connections) {
         const baseWeight = map(strength, PARAMS.minLinkStrength, 1, 
             PARAMS.baseWeightMin, PARAMS.baseWeightMax);
         
-        stroke(0, alpha);
+        // Use branchColor instead of hardcoded black
+        const { color } = PARAMS.branchColor;
+        stroke(color.r, color.g, color.b, alpha);
         
         const fromMove = linkographData.moves[conn.from];
         const toMove = linkographData.moves[conn.to];
@@ -334,15 +349,17 @@ function drawConnectionBranches(connections) {
         drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove, false);
         drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove, false);
         
-        // Draw connection point
+        // Use branchColor for connection point
         noStroke();
-        fill(0, alpha);
+        fill(color.r, color.g, color.b, alpha);
         circle(jointX, jointY, baseWeight * 2.5);
     }
 }
 
 function drawMoves() {
     if (!linkographData.moves) return;
+    
+    const { color, alpha } = PARAMS.movePointColor;
     
     for (const move of linkographData.moves) {
         const x = move.position.x;
@@ -377,13 +394,13 @@ function drawMoves() {
             rect(x, y - 10 - barHeight - PARAMS.moveBarDistance, 5, barHeight);
         }
         
-        // Draw move point
+        // Draw move point with custom color
         noStroke();
-        fill(0);
+        fill(color.r, color.g, color.b, alpha);
         circle(x, y, PARAMS.movePointSize);
         
-        // Draw move text
-        fill(0);
+        // Draw move text with custom color
+        fill(color.r, color.g, color.b, alpha);
         textSize(12);
         textAlign(LEFT, CENTER);
         push();
@@ -457,9 +474,23 @@ function setupTweakpane() {
         label: 'Show Leaves'
     });
     
-    // Add branch layer control to Style folder
+    // Replace existing branchesOnTop with a radio group
     styleFolder.addInput(PARAMS, 'branchesOnTop', {
         label: 'Branches On Top'
+    });
+    
+    styleFolder.addInput(PARAMS, 'branchesBehind', {
+        label: 'Branches Behind'
+    });
+    
+    // Add binding to ensure only one mode is active
+    pane.on('change', (ev) => {
+        if (ev.presetKey === 'branchesOnTop' && ev.value) {
+            PARAMS.branchesBehind = false;
+        } else if (ev.presetKey === 'branchesBehind' && ev.value) {
+            PARAMS.branchesOnTop = false;
+        }
+        redraw();
     });
     
     // Leaf Angle folder
@@ -551,6 +582,30 @@ function setupTweakpane() {
         max: 20,
         step: 1,
         label: 'Move Point Size'
+    });
+    
+    // Add Branch Color folder
+    const branchColorFolder = pane.addFolder({ title: 'Branch Color' });
+    branchColorFolder.addInput(PARAMS.branchColor, 'color', { 
+        view: 'color',
+        label: 'Color'
+    });
+    branchColorFolder.addInput(PARAMS.branchColor, 'alpha', { 
+        min: 0, 
+        max: 255,
+        label: 'Opacity'
+    });
+    
+    // Add Move Point Color folder
+    const movePointColorFolder = pane.addFolder({ title: 'Move Point Color' });
+    movePointColorFolder.addInput(PARAMS.movePointColor, 'color', { 
+        view: 'color',
+        label: 'Color'
+    });
+    movePointColorFolder.addInput(PARAMS.movePointColor, 'alpha', { 
+        min: 0, 
+        max: 255,
+        label: 'Opacity'
     });
 }
 
