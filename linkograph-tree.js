@@ -45,6 +45,13 @@ let PARAMS = {
     // Leaf Density Range
     leafDensityMin: 0.5,  // minimum density multiplier
     leafDensityMax: 2.0,  // maximum density multiplier
+    
+    // Add branch layer control
+    branchesOnTop: false, // Default: branches behind leaves
+    
+    // Add opacity range parameters for links
+    linkAlphaMin: 50,   // Default minimum opacity
+    linkAlphaMax: 255,  // Default maximum opacity
 };
 
 // Constants from app.js
@@ -203,30 +210,27 @@ function drawLeaf(x, y, size, angle, isLeft) {
     pop();
 }
 
-function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoint, moveData) {
-   
-   // console.log('Branch Data:', {
-   //     moveData,
-   //     strength,
-   //     isFromJoint
-   // });
-
+function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoint, moveData, leavesOnly = false) {
     const branchAngle = atan2(endY - startY, endX - startX);
     
     for (let t = 0; t <= 1; t += 0.02) {
-        // draw branch
         const x1 = lerp(startX, endX, t);
         const y1 = lerp(startY, endY, t);
         const x2 = lerp(startX, endX, t + 0.02);
         const y2 = lerp(startY, endY, t + 0.02);
-        const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);
-        strokeWeight(weight);
-        line(x1, y1, x2, y2);
         
-        // generate leaves
+        // Only draw branches in non-leavesOnly mode
+        if (!leavesOnly) {
+            const weight = map(t, 0, 1, baseWeight * 2.5, baseWeight * 0.3);
+            strokeWeight(weight);
+            line(x1, y1, x2, y2);
+        }
+        
+        // Only draw leaves under appropriate conditions
         if (strength >= PARAMS.leafThreshold && 
             t > 1 - PARAMS.leafZone && 
-            PARAMS.showLeaves) {
+            PARAMS.showLeaves &&
+            (leavesOnly || !PARAMS.branchesOnTop)) {
             
             const isLeft = random() < 0.5;
             
@@ -238,23 +242,10 @@ function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoin
                     linkographData.metadata.maxBacklinkIndex : 
                     linkographData.metadata.maxForelinkIndex;
                 
-                //    console.log('Density Calculation:', {
-                //    isLeft,
-                //    linkIndex,
-                //    maxIndex,
-                //    beforeMap: densityMultiplier
-                //});
-                
                 densityMultiplier = map(linkIndex, 0, maxIndex, 
                     PARAMS.leafDensityMin, 
                     PARAMS.leafDensityMax
                 );
-                
-                //    console.log('After mapping:', {
-                //    densityMultiplier,
-                //    min: PARAMS.leafDensityMin,
-                //    max: PARAMS.leafDensityMax
-                //});
             }
             
             // apply density
@@ -274,16 +265,27 @@ function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoin
 function drawConnections() {
     if (!linkographData.connections) return;
     
-    // fix random seed
+    // Fix random seed
     const seed = linkographData.connections.length;
     randomSeed(seed);
     
     const sortedConnections = [...linkographData.connections]
         .sort((a, b) => a.strength - b.strength);
     
-    for (const conn of sortedConnections) {
-        //console.log('Raw Connection:', conn);  
-        
+    if (PARAMS.branchesOnTop) {
+        // Draw leaves first
+        drawConnectionLeaves(sortedConnections);
+        // Then draw branches
+        drawConnectionBranches(sortedConnections);
+    } else {
+        // Draw in original order
+        drawConnectionBranches(sortedConnections);
+    }
+}
+
+// Function to draw only leaves
+function drawConnectionLeaves(connections) {
+    for (const conn of connections) {
         const strength = conn.strength;
         if (strength < PARAMS.minLinkStrength) continue;
         
@@ -293,24 +295,43 @@ function drawConnections() {
         const alpha = map(strength, PARAMS.minLinkStrength, 1, 50, 255);
         const baseWeight = map(strength, PARAMS.minLinkStrength, 1, 
             PARAMS.baseWeightMin, PARAMS.baseWeightMax);
+            
+        // Get move data
+        const fromMove = linkographData.moves[conn.from];
+        const toMove = linkographData.moves[conn.to];
+        
+        // Draw only leaves, no branches
+        drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove, true);
+        drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove, true);
+    }
+}
+
+// Function to draw only branches
+function drawConnectionBranches(connections) {
+    for (const conn of connections) {
+        const strength = conn.strength;
+        if (strength < PARAMS.minLinkStrength) continue;
+        
+        const jointX = (conn.fromPos.x + conn.toPos.x) / 2;
+        const jointY = conn.fromPos.y + ((conn.toPos.x - conn.fromPos.x) / 2);
+        
+        // Use parameterized opacity range
+        const alpha = map(strength, PARAMS.minLinkStrength, 1, 
+            PARAMS.linkAlphaMin, PARAMS.linkAlphaMax);
+        
+        const baseWeight = map(strength, PARAMS.minLinkStrength, 1, 
+            PARAMS.baseWeightMin, PARAMS.baseWeightMax);
         
         stroke(0, alpha);
-
-        // get move data
-        const fromMove = linkographData.moves[conn.from]; 
-        const toMove = linkographData.moves[conn.to];      
         
-        //    console.log('Connection Data:', {
-        //    from: conn.from,
-        //    to: conn.to,
-        //    fromMove,
-        //    toMove
-        //});
+        const fromMove = linkographData.moves[conn.from];
+        const toMove = linkographData.moves[conn.to];
         
-        drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove);
-        drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove);
+        // Draw only branches, no leaves
+        drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove, false);
+        drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove, false);
         
-        // draw joint point
+        // Draw connection point
         noStroke();
         fill(0, alpha);
         circle(jointX, jointY, baseWeight * 2.5);
@@ -433,6 +454,11 @@ function setupTweakpane() {
         label: 'Show Leaves'
     });
     
+    // Add branch layer control to Style folder
+    styleFolder.addInput(PARAMS, 'branchesOnTop', {
+        label: 'Branches On Top'
+    });
+    
     // Leaf Angle folder
     const leafAngleFolder = pane.addFolder({ title: 'Leaf Angles' });
     leafAngleFolder.addInput(PARAMS, 'leafBaseAngle', { min: 0, max: 90 });
@@ -500,6 +526,21 @@ function setupTweakpane() {
     pane.on('change', () => {
         redraw();
     });
+    
+    // Add opacity controls to Links folder
+    linkFolder.addInput(PARAMS, 'linkAlphaMin', {
+        label: 'Min Opacity',
+        min: 0,
+        max: 255,
+        step: 1
+    });
+    
+    linkFolder.addInput(PARAMS, 'linkAlphaMax', {
+        label: 'Max Opacity',
+        min: 0,
+        max: 255,
+        step: 1
+    });
 }
 
 const ANIMATION_CONFIG = {
@@ -526,6 +567,11 @@ const ANIMATION_CONFIG = {
         },
         {
             param: 'leafAngleRange',     // Parameter name in PARAMS
+            startValue: 0,            // Initial value
+            endValue: null,           // null means use current value
+        },
+        {
+            param: 'linkAlphaMax',     // Parameter name in PARAMS
             startValue: 0,            // Initial value
             endValue: null,           // null means use current value
         },
