@@ -52,6 +52,9 @@ let PARAMS = {
     // Add opacity range parameters for links
     linkAlphaMin: 50,   // Default minimum opacity
     linkAlphaMax: 255,  // Default maximum opacity
+    
+    // Add move point size parameter
+    movePointSize: 10, // Default size for move points
 };
 
 // Constants from app.js
@@ -377,7 +380,7 @@ function drawMoves() {
         // Draw move point
         noStroke();
         fill(0);
-        circle(x, y, 10);
+        circle(x, y, PARAMS.movePointSize);
         
         // Draw move text
         fill(0);
@@ -540,6 +543,14 @@ function setupTweakpane() {
         min: 0,
         max: 255,
         step: 1
+    });
+    
+    // Add move point size control to Visualization folder
+    vizFolder.addInput(PARAMS, 'movePointSize', { 
+        min: 4, 
+        max: 20,
+        step: 1,
+        label: 'Move Point Size'
     });
 }
 
