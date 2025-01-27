@@ -238,23 +238,23 @@ function drawBranch(startX, startY, endX, endY, baseWeight, strength, isFromJoin
                     linkographData.metadata.maxBacklinkIndex : 
                     linkographData.metadata.maxForelinkIndex;
                 
-                console.log('Density Calculation:', {
-                    isLeft,
-                    linkIndex,
-                    maxIndex,
-                    beforeMap: densityMultiplier
-                });
+                //    console.log('Density Calculation:', {
+                //    isLeft,
+                //    linkIndex,
+                //    maxIndex,
+                //    beforeMap: densityMultiplier
+                //});
                 
                 densityMultiplier = map(linkIndex, 0, maxIndex, 
                     PARAMS.leafDensityMin, 
                     PARAMS.leafDensityMax
                 );
                 
-                console.log('After mapping:', {
-                    densityMultiplier,
-                    min: PARAMS.leafDensityMin,
-                    max: PARAMS.leafDensityMax
-                });
+                //    console.log('After mapping:', {
+                //    densityMultiplier,
+                //    min: PARAMS.leafDensityMin,
+                //    max: PARAMS.leafDensityMax
+                //});
             }
             
             // apply density
@@ -300,12 +300,12 @@ function drawConnections() {
         const fromMove = linkographData.moves[conn.from]; 
         const toMove = linkographData.moves[conn.to];      
         
-        console.log('Connection Data:', {
-            from: conn.from,
-            to: conn.to,
-            fromMove,
-            toMove
-        });
+        //    console.log('Connection Data:', {
+        //    from: conn.from,
+        //    to: conn.to,
+        //    fromMove,
+        //    toMove
+        //});
         
         drawBranch(jointX, jointY, conn.fromPos.x, conn.fromPos.y, baseWeight, strength, true, fromMove);
         drawBranch(jointX, jointY, conn.toPos.x, conn.toPos.y, baseWeight, strength, true, toMove);
