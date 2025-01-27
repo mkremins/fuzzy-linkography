@@ -240,18 +240,26 @@ function makeLinkObjects(props) {
 
 // Export data functionality
 function exportLinkographData(episode) {
-	// Extract necessary connection information
-	const connections = [];
-	
-	// Iterate through all connections
-	for (const [currIdx, linkSet] of Object.entries(episode.links)) {
-		for (const [prevIdx, strength] of Object.entries(linkSet)) {
-			if (strength >= MIN_LINK_STRENGTH) {
-				connections.push({
+	return {
+		title: episode.title,
+		moves: episode.moves.map((move, idx) => ({
+			id: idx,
+			text: move.text,
+			timestamp: move.timestamp,
+			position: {
+				x: (idx * episode.moveSpacing) + INIT_X,
+				y: INIT_Y
+			},
+			backlinkIndex: move.backlinkIndex,
+			forelinkIndex: move.forelinkIndex
+		})),
+		connections: Object.entries(episode.links).flatMap(([currIdx, linkSet]) => 
+			Object.entries(linkSet)
+				.filter(([_, strength]) => strength >= MIN_LINK_STRENGTH)
+				.map(([prevIdx, strength]) => ({
 					from: parseInt(prevIdx),
 					to: parseInt(currIdx),
 					strength: strength,
-					// Add position information
 					fromPos: {
 						x: (parseInt(prevIdx) * episode.moveSpacing) + INIT_X,
 						y: INIT_Y
@@ -260,24 +268,8 @@ function exportLinkographData(episode) {
 						x: (parseInt(currIdx) * episode.moveSpacing) + INIT_X,
 						y: INIT_Y
 					}
-				});
-			}
-		}
-	}
-
-	return {
-		title: episode.title,
-		moves: episode.moves.map((move, idx) => ({
-			id: idx,
-			text: move.text,
-			position: {
-				x: (idx * episode.moveSpacing) + INIT_X,
-				y: INIT_Y
-			},
-			backlinkIndex: move.backlinkIndex,
-			forelinkIndex: move.forelinkIndex
-		})),
-		connections: connections,
+				}))
+		),
 		metadata: {
 			moveSpacing: episode.moveSpacing,
 			maxForelinkIndex: episode.maxForelinkIndex,

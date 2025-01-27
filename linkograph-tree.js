@@ -57,6 +57,8 @@ const LEAF_THRESHOLD = 0.7;  // only connections stronger than this will grow le
 const LEAF_ZONE = 0.3;      // only the last parts of the branch can grow leaves
 const LEAF_COUNT_RANGE = [2, 8];  // range of leaf count, mapped by strength
 
+const SEGMENT_THRESHOLD = 1000 * 60 * 30; // 30 mins -> milliseconds
+
 // File handling
 async function loadAvailableFiles() {
     try {
@@ -141,24 +143,31 @@ function draw() {
     drawMoves();
 }
 
-//currently not used
+function shouldSegmentTimeline(currMove, prevMove) {
+    if (!(currMove?.timestamp && prevMove?.timestamp)) return false
+    const deltaTime = Date.parse(currMove.timestamp) - Date.parse(prevMove.timestamp)
+    return deltaTime >= SEGMENT_THRESHOLD
+}
+
 function drawTimelineDividers() {
-    if (!linkographData.moves) return;
+    if (!linkographData.moves) return
     
-    stroke(153); // #999
-    strokeWeight(1);
-    drawingContext.setLineDash([2]);
+    stroke(153) // #999
+    strokeWeight(1)
+    drawingContext.setLineDash([2])
     
     for (let i = 0; i < linkographData.moves.length - 1; i++) {
-        const currMove = linkographData.moves[i];
-        const nextMove = linkographData.moves[i + 1];
-        if (!currMove.timestamp || !nextMove.timestamp) continue;
+        const currMove = linkographData.moves[i]
+        const nextMove = linkographData.moves[i + 1]
         
-        const x = currMove.position.x + (linkographData.metadata.moveSpacing / 2);
-        line(x, INIT_Y - INIT_Y/2, x, INIT_Y + INIT_Y/2);
+        // show timeline based on threshold
+        if (!shouldSegmentTimeline(nextMove, currMove)) continue
+        
+        const x = currMove.position.x + (linkographData.metadata.moveSpacing / 2)
+        line(x, INIT_Y - INIT_Y/2, x, INIT_Y + INIT_Y/2)
     }
     
-    drawingContext.setLineDash([]); // Reset dash pattern
+    drawingContext.setLineDash([]) // Reset dash pattern
 }
 
 function drawLeaf(x, y, size, angle, isLeft) {
